@@ -42,12 +42,23 @@ class EditHuacalesViewModel @Inject constructor(
 
             is EditHuacalesUiEvent.Save -> onSave()
             is EditHuacalesUiEvent.Delete -> onDelete()
+            is EditHuacalesUiEvent.Reset -> onReset()
         }
     }
 
+    private fun onReset() {
+        _state.value = EditHuacalesUiState()
+    }
+
     private fun onLoad(id: Int?) {
+        onReset()
+
         if (id == null || id == 0) {
-            _state.value = _state.value.copy(isNew = true, IdEntrada = null)
+            _state.value = _state.value.copy(
+                isNew = true,
+                IdEntrada = null,
+                fecha = Date().toString()
+            )
             return
         }
         viewModelScope.launch {
@@ -59,7 +70,10 @@ class EditHuacalesViewModel @Inject constructor(
                         IdEntrada = huacal.IdEntrada,
                         nombreCliente = huacal.NombreCliente,
                         cantidad = huacal.Cantidad,
-                        precio = huacal.Precio
+                        precio = huacal.Precio,
+                        fecha = huacal.Fecha,
+                        saved = false,
+                        deleted = false
                     )
                 }
             }
@@ -88,7 +102,7 @@ class EditHuacalesViewModel @Inject constructor(
             _state.update { it.copy(isSaving = true) }
             val id = state.value.IdEntrada ?: 0
 
-            if(state.value.fecha.isNullOrBlank()){
+            if (state.value.fecha.isNullOrBlank()) {
                 _state.value = _state.value.copy(fecha = Date().toString())
             }
 
@@ -102,7 +116,7 @@ class EditHuacalesViewModel @Inject constructor(
             val result = upsertHuacalesUseCase(huacal)
             result.onSuccess { newId ->
                 _state.value = EditHuacalesUiState(saved = true, IdEntrada = newId)
-            }.onFailure { e->
+            }.onFailure { e ->
                 _state.update { it.copy(isSaving = false) }
             }
 
@@ -116,10 +130,10 @@ class EditHuacalesViewModel @Inject constructor(
             return
         }
 
-       viewModelScope.launch {
+        viewModelScope.launch {
             _state.update { it.copy(isDeleting = true) }
             deleteHuacalesUseCase(IdEntrada)
-           _state.update { it.copy(isDeleting = false, deleted = true) }
-       }
+            _state.update { it.copy(isDeleting = false, deleted = true) }
+        }
     }
 }
