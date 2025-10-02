@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EsthiberValentin.AP2_P1</string>
+
+    <string name="huacales_quantity">Huacales: %d</string>
+    <string name="huacales_price">Precio: $%.2f</string>
+    <string name="huacales_total">Total: $%.2f</string>
 </resources>
