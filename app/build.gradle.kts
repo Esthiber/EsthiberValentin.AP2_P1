@@ -7,11 +7,11 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
 }
 android {
-    namespace = "edu.ucne.regjugadores"
+    namespace = "edu.ucne.esthibervalentin_ap2_p1"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "edu.ucne.regjugadores"
+        applicationId = "edu.ucne.esthibervalentin_ap2_p1"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
